@@ -15,11 +15,11 @@ def create_user(
         password=password,
     )
 
-    if email is not None:
+    if email:
         user.email = email
-    if first_name is not None:
+    if first_name:
         user.first_name = first_name
-    if last_name is not None:
+    if last_name:
         user.last_name = last_name
 
     user.save()
@@ -38,17 +38,17 @@ def update_user(
     first_name: str = None,
     last_name: str = None,
 ) -> User:
-    user = User.objects.get(id=user_id)
+    user = get_user(user_id)  # ✅ CORRIGIDO (DRY)
 
-    if username is not None:
+    if username:
         user.username = username
-    if password is not None:
+    if password:
         user.set_password(password)
-    if email is not None:
+    if email:
         user.email = email
-    if first_name is not None:
+    if first_name:
         user.first_name = first_name
-    if last_name is not None:
+    if last_name:
         user.last_name = last_name
 
     user.save()
