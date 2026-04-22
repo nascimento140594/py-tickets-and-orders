@@ -16,13 +16,12 @@ def create_order(
     date: str = None,
 ) -> Order:
     user = User.objects.get(username=username)
+    order = Order.objects.create(user=user)
 
-    order = Order(user=user)
-
-    if date:
-        order.created_at = datetime.strptime(date, "%Y-%m-%d %H:%M")
-
-    order.save()  # ✅ apenas UMA vez
+    if date is not None:
+        created_at = datetime.strptime(date, "%Y-%m-%d %H:%M")
+        Order.objects.filter(id=order.id).update(created_at=created_at)
+        order.refresh_from_db()
 
     for ticket in tickets:
         Ticket.objects.create(
@@ -40,7 +39,7 @@ def create_order(
 def get_orders(username: str = None) -> QuerySet[Order]:
     queryset = Order.objects.all()
 
-    if username:
+    if username is not None:
         queryset = queryset.filter(user__username=username)
 
     return queryset
